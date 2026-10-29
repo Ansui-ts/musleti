@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>你是哪一块 · 肌肉人格测验</title>
+<meta name="description" content="二十道关于日常的题，测出你是十六块肌肉里的哪一块。">
+<meta name="theme-color" content="#100C0A">
+<meta property="og:title" content="你是哪一块 · 肌肉人格测验">
+<meta property="og:description" content="一块肌肉的处境，和用它的人。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ansui-ts.github.io/musleti/">
+<meta property="og:site_name" content="你是哪一块">
+<link rel="canonical" href="https://ansui-ts.github.io/musleti/">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta property="og:image" content="https://ansui-ts.github.io/musleti/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ansui-ts.github.io/musleti/og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23100C0A'/%3E%3Cpath d='M14 20 L20 24 L20 40 L14 44 L8 40 L8 24Z' fill='%23E23A22'/%3E%3Crect x='20' y='28' width='24' height='8' fill='%23E23A22'/%3E%3Cpath d='M50 20 L56 24 L56 40 L50 44 L44 40 L44 24Z' fill='%23E23A22'/%3E%3C/svg%3E">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#100C0A; --bg2:#171110; --panel:#1E1715; --panel2:#261C18;
+  --line:#33261F; --line2:#4A352A;
+  --ink:#F6EFE6; --ink2:#C4B2A0; --ink3:#877567;
+  --red:#E23A22; --red2:#FF5A33; --amber:#F0932B; --gold:#D9A544;
+}
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:15px; line-height:1.75; letter-spacing:.01em;
+  overscroll-behavior:none;
+  background-image:
+    radial-gradient(120% 70% at 50% -10%, #2E1B13 0%, #100C0A 62%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.015) 0 1px, transparent 1px 4px);
+}
+#app{
+  position:relative; width:100%; max-width:480px; margin:0 auto;
+  height:100vh; height:100dvh; overflow:hidden;
+}
+.screen{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  padding:0 20px env(safe-area-inset-bottom);
+  opacity:0; visibility:hidden; transform:translateY(10px);
+  transition:opacity .3s ease, transform .3s ease, visibility .3s;
+}
+.screen.on{opacity:1; visibility:visible; transform:none}
+
+/* ---------- 封面 ---------- */
+#cover{justify-content:space-between; padding-top:calc(28px + env(safe-area-inset-top)); padding-bottom:22px}
+.eyebrow{
+  display:flex; align-items:center; gap:10px;
+  font-size:10.5px; letter-spacing:.26em; color:var(--ink3); text-transform:uppercase;
+}
+.eyebrow .sep{flex:1; height:1px; background:linear-gradient(90deg,var(--line2),transparent)}
+.cvMain{flex:1; display:flex; flex-direction:column; justify-content:center; padding-bottom:8px}
+.logo{width:172px; margin:0 0 32px -7px}
+.logo svg{display:block; width:100%; height:auto}
+h1{
+  margin:0; font-size:clamp(42px,12.6vw,56px); font-weight:900;
+  line-height:1.12; letter-spacing:-.035em;
+}
+h1 em{font-style:normal; color:var(--red); display:block}
+.cvSub{margin:18px 0 0; font-size:15px; color:var(--ink2); letter-spacing:.02em}
+.cvNote{margin:12px 0 0; font-size:12.5px; color:var(--ink3); line-height:1.85; max-width:19em}
+/* 封面下方的四维标签，填空也提前交底 */
+.axes{display:flex; flex-wrap:wrap; gap:6px 0; margin-top:30px}
+.axes span{
+  font-size:10px; letter-spacing:.16em; color:#6B5A4C;
+  padding-right:10px; margin-right:10px; border-right:1px solid #2A1F19;
+}
+.axes span:last-child{border-right:0; margin-right:0; padding-right:0}
+.cvBottom{padding-top:8px}
+.lastTip{min-height:18px; margin-top:14px; font-size:12px; color:var(--ink3); letter-spacing:.01em}
+.lastTip b{color:var(--ink2); font-weight:600}
+.lastTip .dotm{display:inline-block; width:4px; height:4px; border-radius:50%; background:var(--red); vertical-align:middle; margin:0 8px 2px}
+
+/* ---------- 按钮 ---------- */
+.btn{
+  display:flex; align-items:center; justify-content:center; width:100%;
+  padding:16px 18px; border:0; cursor:pointer; font:inherit;
+  font-size:15px; font-weight:700; letter-spacing:.08em;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 11px),calc(100% - 11px) 100%,0 100%);
+  transition:transform .12s ease, background .18s ease, color .18s ease, opacity .18s;
+}
+.btn:active{transform:scale(.985)}
+.btn.primary{background:var(--red); color:#fff}
+.btn.primary:hover{background:var(--red2)}
+.btn.ghost{background:transparent; color:var(--ink2); border:1px solid var(--line2)}
+.btn.ghost:hover{border-color:var(--ink3); color:var(--ink)}
+.btn:disabled{opacity:.32; cursor:not-allowed; transform:none}
+.btn:disabled:hover{background:var(--red)}
+
+/* ---------- 答题 ---------- */
+#quiz{padding-top:calc(20px + env(safe-area-inset-top))}
+.qTop{padding-bottom:18px}
+.qMeta{display:flex; align-items:baseline; gap:6px; font-variant-numeric:tabular-nums}
+#qIdx{font-size:22px; font-weight:800; color:var(--ink); letter-spacing:.02em}
+.qOf{font-size:11px; color:var(--ink3); letter-spacing:.1em}
+.qAxis{
+  margin-left:auto; font-size:10.5px; letter-spacing:.2em; color:var(--ink3);
+  padding:3px 8px; border:1px solid var(--line); white-space:nowrap;
+}
+.ticks{display:flex; gap:3px; margin-top:10px}
+.ticks i{flex:1; height:3px; background:var(--line); transition:background .2s}
+.ticks i.done{background:var(--red)}
+.ticks i.now{background:var(--amber)}
+.qBody{flex:1; min-height:0; overflow-y:auto; padding-bottom:8px; -webkit-overflow-scrolling:touch;
+  display:flex; flex-direction:column}
+.qInner{margin:auto 0; width:100%}
+.qText{
+  margin:0 0 22px; font-size:20px; font-weight:700; line-height:1.6;
+  letter-spacing:-.01em; color:var(--ink);
+}
+.opts{display:flex; flex-direction:column; gap:10px}
+.opt{
+  display:block; width:100%; text-align:left; font:inherit;
+  padding:15px 16px 15px 17px; cursor:pointer;
+  background:var(--panel); color:var(--ink2);
+  border:1px solid var(--line); border-left:3px solid var(--line2);
+  font-size:14.5px; line-height:1.7;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%);
+  transition:background .16s, color .16s, border-color .16s;
+}
+.opt:hover{background:var(--panel2); color:var(--ink)}
+.opt.sel{
+  background:#2B1A14; color:var(--ink); border-color:#5A2A1C;
+  border-left-color:var(--red); font-weight:500;
+}
+.opt .k{
+  display:inline-block; width:16px; font-size:10.5px; letter-spacing:.1em;
+  color:var(--ink3); vertical-align:1px;
+}
+.opt.sel .k{color:var(--red)}
+.qNav{display:flex; gap:10px; padding:16px 0 18px; border-top:1px solid var(--line)}
+.qNav .btn{flex:1}
+
+/* ---------- 结果 ---------- */
+#result{padding-top:calc(20px + env(safe-area-inset-top))}
+.resBody{flex:1; min-height:0; overflow-y:auto; padding-bottom:22px}
+.resTop{display:flex; align-items:flex-start; gap:12px; padding-bottom:16px}
+.dots{display:flex; gap:4px; margin-top:7px}
+.dots i{width:7px; height:7px; background:transparent; border:1px solid var(--line2)}
+.dots i.on{background:var(--red); border-color:var(--red)}
+.resKicker{font-size:11px; letter-spacing:.24em; color:var(--ink3); margin-bottom:6px}
+h2.resName{
+  margin:0; font-size:clamp(30px,9.5vw,40px); font-weight:900;
+  letter-spacing:-.03em; line-height:1.15;
+}
+.resCode{margin-left:auto; text-align:right; font-variant-numeric:tabular-nums}
+.resCode{max-width:40%}
+.resCode b{display:block; font-size:15px; font-weight:700; color:var(--gold); letter-spacing:.16em}
+.resCode span{display:block; font-size:9.5px; color:var(--ink3); letter-spacing:.06em; line-height:1.6}
+.resOne{
+  margin:0 0 22px; padding:14px 16px; background:var(--panel);
+  border-left:3px solid var(--red); font-size:15.5px; color:var(--ink);
+  font-weight:600; letter-spacing:.01em;
+}
+.resTxt{margin-top:4px}
+.whereMark{font-size:10px; letter-spacing:.22em; color:#6B5A4C; margin:0 0 7px}
+.resTxt p{margin:0 0 13px; font-size:14.5px; color:var(--ink2); line-height:1.9}
+.resTxt p:last-child{margin-bottom:0}
+.sec{margin:20px 0 0; border-top:1px solid var(--line)}
+.sec summary{
+  display:flex; align-items:center; gap:8px; padding:14px 0; cursor:pointer;
+  font-size:13px; letter-spacing:.1em; color:var(--ink2); list-style:none;
+}
+.sec summary::-webkit-details-marker{display:none}
+.sec summary::after{content:"＋"; margin-left:auto; color:var(--ink3); font-size:14px}
+.sec[open] summary::after{content:"－"}
+.sec summary b{color:var(--ink); font-weight:600; letter-spacing:.02em}
+.sec .inner{padding:2px 0 8px}
+.sec .inner p{margin:0 0 13px; font-size:14.5px; color:var(--ink2); line-height:1.9}
+
+.xtra{margin:26px 0 4px; border-top:1px solid var(--line); padding-top:4px}
+.xRow{padding:15px 0; border-bottom:1px solid var(--line)}
+.xRow .xK{display:block; font-size:10.5px; letter-spacing:.2em; color:var(--ink3); margin-bottom:5px}
+.xRow b{font-size:16px; font-weight:700; color:var(--ink); letter-spacing:.01em}
+.xRow b .arw{color:var(--red); font-weight:400; margin:0 6px}
+.xRow p{margin:6px 0 0; font-size:13px; color:var(--ink3); line-height:1.8}
+.xRow .wk{font-size:11px; color:var(--gold); letter-spacing:.1em; margin-left:7px; font-weight:400}
+
+/* 必须给实底，否则滚动正文会从按钮下面透出来，看着像被压住 */
+.resFoot{padding:14px 0 18px; border-top:1px solid var(--line); background:var(--bg);
+  display:flex; flex-direction:column; gap:9px; position:relative; z-index:2}
+.resBtns{display:flex; gap:9px}
+.resBtns .btn{flex:1; padding:14px 10px; font-size:13.5px; letter-spacing:.06em}
+.declare{margin:0; font-size:10.5px; color:#6E5B4C; text-align:center; letter-spacing:.04em}
+
+/* ---------- 图鉴 ---------- */
+#gallery{padding-top:calc(20px + env(safe-area-inset-top))}
+.gHead{display:flex; align-items:flex-end; gap:10px; padding-bottom:14px}
+.gHead h2{margin:0; font-size:23px; font-weight:900; letter-spacing:-.02em}
+.gHead .back{
+  margin-left:auto; background:none; border:0; color:var(--ink3);
+  font:inherit; font-size:12px; letter-spacing:.06em; cursor:pointer; padding:6px 0;
+}
+.gSub{margin:0; padding-bottom:16px; font-size:12px; color:var(--ink3); line-height:1.8; border-bottom:1px solid var(--line)}
+.gBody{flex:1; min-height:0; overflow-y:auto; padding-bottom:24px}
+.gGrid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:16px 0 4px}
+.gCard{
+  padding:12px 6px 10px; background:var(--panel); border:1px solid var(--line);
+  text-align:center;
+}
+.gCard .dots{justify-content:center; margin:0 0 8px}
+.gCard .nm{font-size:11px; color:var(--ink3); line-height:1.35; letter-spacing:.02em}
+.gCard.on{border-color:#5A2A1C; background:#281A15}
+.gCard.on .nm{color:var(--ink); font-weight:600}
+.gHistT{font-size:10.5px; letter-spacing:.22em; color:var(--ink3); margin:26px 0 6px}
+.hRow{
+  display:flex; align-items:baseline; gap:9px; padding:11px 0;
+  border-bottom:1px solid var(--line); font-size:13.5px; color:var(--ink2);
+}
+.hRow b{color:var(--ink); font-weight:600}
+.hRow .hC{font-size:10px; color:var(--gold); letter-spacing:.12em}
+.hRow .hT{margin-left:auto; font-size:11px; color:var(--ink3); white-space:nowrap}
+
+/* ---------- 底部声明 ---------- */
+.foot{
+  position:fixed; left:0; right:0; bottom:0; z-index:5;
+  padding:7px 16px calc(6px + env(safe-area-inset-bottom));
+  font-size:9.5px; letter-spacing:.12em; color:#6E5B4C; text-align:center;
+  background:linear-gradient(180deg,transparent,rgba(16,12,10,.92) 55%);
+  pointer-events:none;
+}
+.screen{padding-bottom:34px}
+
+/* ---------- 复制提示 ---------- */
+.toast{
+  position:fixed; left:50%; bottom:60px; transform:translate(-50%,12px);
+  background:var(--ink); color:#17110E; padding:9px 18px; font-size:12.5px;
+  font-weight:600; letter-spacing:.04em; opacity:0; pointer-events:none;
+  transition:opacity .2s, transform .2s; z-index:20; white-space:nowrap;
+}
+.toast.on{opacity:1; transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ 封面 ============ -->
+  <section class="screen on" id="cover">
+    <div class="eyebrow"><span>原作人格测验</span><span class="sep"></span><span>20 题 · 约 3 分钟</span></div>
+    <div class="cvMain">
+      <div class="logo">
+        <svg viewBox="0 0 132 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="gR" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#FF6A42"/><stop offset=".55" stop-color="#E23A22"/><stop offset="1" stop-color="#B8240F"/>
+            </linearGradient>
+          </defs>
+          <!-- 左六角片 -->
+          <path d="M23 4 L39.5 13.5 L39.5 48.5 L23 58 L6.5 48.5 L6.5 13.5 Z" fill="url(#gR)"/>
+          <path d="M23 12 L32 17.2 L32 44.8 L23 50 L14 44.8 L14 17.2 Z" fill="#100C0A" opacity=".22"/>
+          <!-- 中杆 -->
+          <rect x="39" y="24.5" width="54" height="13" fill="url(#gR)"/>
+          <rect x="39" y="24.5" width="54" height="3.4" fill="#FF8A66" opacity=".45"/>
+          <!-- 握纹 -->
+          <g fill="#100C0A" opacity=".28">
+            <rect x="47" y="24.5" width="2.2" height="13"/><rect x="53" y="24.5" width="2.2" height="13"/>
+            <rect x="59" y="24.5" width="2.2" height="13"/><rect x="65" y="24.5" width="2.2" height="13"/>
+            <rect x="71" y="24.5" width="2.2" height="13"/><rect x="77" y="24.5" width="2.2" height="13"/>
+            <rect x="83" y="24.5" width="2.2" height="13"/>
+          </g>
+          <!-- 右六角片 -->
+          <path d="M109 4 L125.5 13.5 L125.5 48.5 L109 58 L92.5 48.5 L92.5 13.5 Z" fill="url(#gR)"/>
+          <path d="M109 12 L118 17.2 L118 44.8 L109 50 L100 44.8 L100 17.2 Z" fill="#100C0A" opacity=".22"/>
+        </svg>
+      </div>
+      <h1>你是<em>哪一块</em></h1>
+      <p class="cvSub">一块肌肉的处境，和用它的人</p>
+      <p class="cvNote">二十道关于日常的题。答案不在性格里，在你用力的习惯里。</p>
+      <div class="axes">
+        <span>怎么使劲</span><span>谁看得见</span><span>松还是紧</span><span>力气给谁</span>
+      </div>
+    </div>
+    <div class="cvBottom">
+      <button class="btn primary" id="startBtn">开始测试</button>
+      <div class="lastTip" id="lastTip"></div>
+    </div>
+  </section>
+
+  <!-- ============ 答题 ============ -->
+  <section class="screen" id="quiz">
+    <div class="qTop">
+      <div class="qMeta">
+        <span id="qIdx">01</span><span class="qOf">/ 20</span>
+        <span class="qAxis" id="qAxis">怎么使劲</span>
+      </div>
+      <div class="ticks" id="ticks"></div>
+    </div>
+    <div class="qBody">
+      <div class="qInner">
+        <h2 class="qText" id="qText"></h2>
+        <div class="opts" id="opts"></div>
+      </div>
+    </div>
+    <div class="qNav">
+      <button class="btn ghost" id="prevBtn">上一题</button>
+      <button class="btn primary" id="nextBtn">下一题</button>
+    </div>
+  </section>
+
+  <!-- ============ 结果 ============ -->
+  <section class="screen" id="result">
+    <div class="resBody" id="resBody"></div>
+    <div class="resFoot">
+      <div class="resBtns">
+        <button class="btn ghost" id="againBtn">再测一次</button>
+        <button class="btn ghost" id="galleryBtn">看图鉴</button>
+      </div>
+      <button class="btn primary" id="shareBtn">复制结果</button>
+      <p class="declare">仅供娱乐，不构成任何医学或健康建议。</p>
+    </div>
+  </section>
+
+  <!-- ============ 图鉴 ============ -->
+  <section class="screen" id="gallery">
+    <div class="gHead">
+      <h2>肌肉图鉴</h2>
+      <button class="back" id="backBtn">返回</button>
+    </div>
+    <p class="gSub" id="gSub"></p>
+    <div class="gBody">
+      <div class="gGrid" id="gGrid"></div>
+      <div class="gHistT" id="gHistT" style="display:none">我的记录</div>
+      <div class="hist" id="gHist"></div>
+    </div>
+  </section>
+
+</div>
+<div class="foot">仅供娱乐 · 如有侵权请联系下架 · 感谢支持</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = {"types":[{"no":1,"n":"斜方肌","k":"traps","c":"0010","coord":"主动 · 台前 · 松 · 给别人","one":"谁的忙都接，然后自己加班","loc":"从后脑勺起，沿颈椎胸椎一路铺到肩胛骨，上束提肩、中束夹背、下束下压。手臂只要动，它就先动。","per":"它没有边界。肩胛骨往哪走它都管，所以别人一动，它就先动。\n管得太宽，就成了全身最容易被调用的一块。卧推推不上去它耸肩，引体拉不动它耸肩，头往前探它还得一直拉住。健身圈管这个叫\"讨好型肌肉\"，还有句玩笑话——八方有难，斜方帮忙。\n人也是这样。他们不太分得清\"我的事\"和\"你的事\"，因为早年没人教过他们分。谁开口都帮，帮得也不太勉强。麻烦出现在事后：他们会突然发现今天什么都没为自己做，然后把这句抱怨也咽回去。","day":"周五下午三点，你手上多了一份不属于你的表。\n同事说\"这个我不太会，你能看一下吗\"，你说好。你自己的报告是晚上十点在家做的，做的时候挺平静，只觉得今天有点长。\n朋友搬家，群里问有没有人帮忙，你第一个回。到了之后搬的是最重的那个箱子，因为你说你力气还行。回程地铁上靠着门站，肩膀有点酸，你没说，因为大家都很累。","mate":"psoas","mw":"一个把力气全给出去，一个把话全咽下去。碰上了，反而都能松一点。","foe":"delts","fw":"都在肩膀上，抢同一块地盘。你这边一耸肩，它那边就白举了。","ex":"哑铃耸肩","exw":"练得最顺手，也最容易被别人借去用。"},{"no":2,"n":"胸大肌","k":"pecs","c":"0000","coord":"主动 · 台前 · 紧 · 给别人","one":"站在前面的时候最稳","loc":"起于锁骨内侧、胸骨和上位肋软骨，收在肱骨上端。把手臂往身体中线拉，往前推。推门、推车、推开人群，都是它。","per":"它必须朝前。前面没有东西，它使不上劲。\n这个动作特点会长成一种人：习惯性地找一个\"前面\"。团队里没人说话他们先说，出了问题大家往后缩他们先站过去。不是不怕，是站到前面反而更稳——手上有事做，心里就不空。\n这种性格容易被读成强势。其实他们的强势有条件：得有人看，得有事推。真让他们一个人待着、什么也不用做，反而会不知所措。他们的存在感是被人需要出来的。","day":"一桌人点菜，服务员站了半分钟，没人开口。\n你说\"那我点\"。你点得很快，还顺手问了句有没有人不吃辣。其实你吃什么都行，你只是受不了那个僵住的场面。\n小组作业到第三周还没分工，你在群里发了段话把活分完了。发之前删改了两遍，怕语气太硬。发完有人只回了个\"嗯\"，你看了半天那个嗯。\n有一次你替所有人挡了一件事，事后领导表扬的是另一个人。你当时笑着说没事，回家路上把这段在心里演了一遍，演到自己说出\"其实是我做的\"，然后就到家了。","mate":"soleus","mw":"一个站最前面，一个站最后面。前面有人喊你，后面有人托着你。","foe":"lats","fw":"一个往前推，一个往后拉。练偏一边，肩膀就会往前扣。","ex":"卧推","exw":"推到最后一组，胸口那一片是热的。"},{"no":3,"n":"肱二头肌","k":"biceps","c":"0001","coord":"主动 · 台前 · 紧 · 留给自己","one":"想要就说，练了就给人看","loc":"长头起肩胛盂上结节，短头起喙突，合成一个肌腹，收在桡骨上。屈肘，顺带把手掌转向上——拧瓶盖、拧毛巾靠的都是它。","per":"十六块里，它是唯一不掩饰自己想要什么的。\n想要线条就去练，练出来就穿短袖，中间没有绕。别人觉得这叫虚荣，其实它只是把\"想被认可\"放在了明处；而大多数人的做法是反过来的——想要，但不说；做了，但不承认是为了被看见。\n好处是内耗少：他们承认欲望，也承认努力是为了换回点什么。坏处是支点在外面——练了三个月没人说，就开始怀疑值不值。","day":"你换了头像，隔十分钟看一次。\n挑的时候会放大，会想这张是不是太刻意。最后还是发了。有人夸\"最近状态不错\"，你嘴上说\"没有没有\"，那天晚上多做了两组，不是为了谁，是那句夸奖还在身上发热。\n也有一段时间你什么都不发。不是不想，是上次发的东西没人在意。你告诉自己这没什么，把训练记录留着只给自己看。第二天照常去，只是拍照时把手机放下了。","mate":"lats","mw":"一个想要被看见，一个从不露面。前者替后者把想说的话说了。","foe":"forearm","fw":"一个负责弯，一个负责抓。手臂的功劳，从来分不清是谁的。","ex":"弯举","exw":"一弯就能看见，练起来最有反馈。"},{"no":4,"n":"三角肌","k":"delts","c":"0011","coord":"主动 · 台前 · 松 · 留给自己","one":"替整条手臂挡在最外面","loc":"从锁骨外侧、肩峰、肩胛冈三面起，像肩章一样包住整个肩关节，收在肱骨外侧。手臂往侧面抬靠它，它还负责把肱骨头按在关节里，不让它脱出去。","per":"整个肩关节只有它一层。所有撞过来的东西，都先到它这儿。\n这种结构会长出一种很特定的人：不抢戏，但一定在最前面。他们不在会上争发言，散会后却会有同事过来说\"刚才谢谢你\"。他们提供的是缓冲——把冲过来的东西挡一下，让里面的人有时间反应。\n让得很自然，自然到别人以为本来就是这样。事后也不太提，因为在他们看来那不算事，只是站的位置刚好在那儿。","day":"饭桌上有人被劝酒，劝到第三杯，你说\"他开车，我替他\"。\n说完你喝了，坐下还笑着，胃里不太舒服。没人再劝那个人。\n家里来客人，你在门口迎，接东西、递拖鞋、挂外套。一顿饭下来你吃得最少，但谁的水杯空了你都知道。\n会上同事被说了句很重的话，全场安静。你没反驳，只接了句\"这块确实是我这边没同步好\"，把话头引开。散会后他给你发消息，你回了两个字：没事。","mate":"diaphragm","mw":"一个挡在外面，一个撑在里面。都不喊累，所以只有彼此知道。","foe":"traps","fw":"你一举手它就跟着耸肩，动作看着做完了，其实全被它代劳。","ex":"侧平举","exw":"轻重量，慢起慢落，肩膀的轮廓就是在这儿出来的。"},{"no":5,"n":"竖脊肌","k":"erector","c":"0100","coord":"主动 · 幕后 · 紧 · 给别人","one":"倒了会牵连别人，所以不倒","loc":"不是一块，是一列。髂肋肌、最长肌、棘肌三条并排，从骶骨一直排到颅底。让脊柱伸直——坐下、站起、低头看手机，它都在工作。","per":"它不能松。松一次，整条脊柱就塌了。\n这类人有一个很深的预设：我倒下了，会有人受影响。这个预设想不出来，是长期待在某个位置上养出来的——家里那个最靠得住的孩子、团队里那个不会出事的成员、朋友里那个永远能接电话的人。\n所以他们很少说\"我不行了\"。不是硬撑，是这个选项压根没被放进考虑范围。他们会在深夜感到一阵说不清的酸，用\"最近有点累\"概括掉，第二天照常起来。","day":"家里出了事，你是最后一个知道的。\n大家怕你担心。你知道之后第一反应不是生气，是把接下来要处理的每件事列出来，一件一件办完。\n项目出问题，会议室里有人说\"这次可能要黄\"。你没接那句话，你说的是\"先把能做的做了\"。散会后你在楼梯间站了一会儿，什么也没想，然后回工位接着改。\n你妈打电话说身体不太舒服，你说\"那去查一下，我陪你去\"。挂了电话你查了一晚上资料。结果没事，你在回家的车上突然很想哭，没哭，因为她在旁边。","mate":"glutes","mw":"一个撑着不动，一个有劲不肯用。凑在一起，谁也倒不了。","foe":"abs","fw":"一个把背拉直，一个把身子卷起来，前后顶着，谁松谁吃亏。","ex":"硬拉","exw":"起身那一下，整个人是被自己撑起来的。"},{"no":6,"n":"腘绳肌","k":"hams","c":"0101","coord":"主动 · 幕后 · 紧 · 留给自己","one":"绷久了，忘了松开是什么感觉","loc":"三条合称，从坐骨结节出发，跨过髋和膝两个关节，收在腓骨头和胫骨内侧。管屈膝和伸髋，跑动时负责刹车——冲刺最后一步是它拉住，不让人扑出去。","per":"一块专门负责刹车的肌肉，天生怕失控。\n用它的人有一个不太说出口的担心：一松，事情就会滑出去。所以他们不敢真休息。休假第一天还在看工作群，躺下之后脑子开始过明天的流程，连刷手机都刷得有点任务感。\n这种紧不是外面逼的，是内部预警太灵。别人觉得可以了，他们觉得还差一点；别人说\"先这样吧\"，他们说\"再检查一遍\"。这让他们很少出事，也让他们很少真的舒服过。","day":"你在休假。海边，太阳很好。你在翻工作群。\n往上翻了两屏，没说话，退出来了。过一个小时又打开一次。\n体检报告出来了，有几个箭头。你没立刻看，先存进相册，隔了两天才点开。点开那一刻你已经想好了最坏的情况，结果没大事，你反而有点空。\n晚上躺下，你开始复盘今天说过的一句话，想它是不是有点冒犯。想到第三遍你意识到自己在想，但停不下来。手机拿起来又放下，最后是困得睡着了才断的。","mate":"obliques","mw":"一个绷着不肯松，一个转身就接住。绷着的那个，第一次被人接住。","foe":"quads","fw":"一个伸膝一个屈膝，同一条腿上从来不同时使劲。","ex":"罗马尼亚硬拉","exw":"大腿后侧拉到发紧的那一下，是它少数被人想起的时刻。"},{"no":7,"n":"小腿三头肌","k":"calves","c":"0110","coord":"主动 · 幕后 · 松 · 给别人","one":"走得最多，说得最少","loc":"腓肠肌两个头加上藏在下面的比目鱼肌，合成一条跟腱落在脚后跟。走路、跑、跳，每次离地都靠它。它还被叫\"第二心脏\"——一收一放，把血往上推。","per":"它是全身走路最多、说话最少的一块。\n这类人往往是群体里的\"脚\"。不主导，不邀功，但所有人移动时要靠他们。聚会散场他们是最后走的那批，因为要确认人都走了、东西都拿了、门锁了。\n他们的价值有一种奇怪的隐蔽性：在的时候没人注意，不在的时候所有人都不方便。而他们自己也不太强调，因为在他们看来，走本来就是走，不需要说。","day":"聚餐散场，人都走了，你还站在门口。\n等最后一辆车开走，你才打开自己的打车软件。回去的路上有点困，心里挺踏实。\n群里发通知，@所有人，一片安静。过了一小时你回了个\"收到\"，又补了一句\"需要我做什么吗\"。其实这条通知跟你关系不大。\n项目收尾了。庆功时大家提了很多人，没人提你。你举着杯子笑，心里过了一遍自己做的那些事，然后觉得算了，反正事情成了。杯子放下，你去把桌上的空瓶收了。","mate":"abs","mw":"一个从不被提，一个不轻易露面。都习惯没人看见，所以都看得见对方。","foe":"soleus","fw":"裹在同一条跟腱里，名字也常被混着叫。","ex":"站姿提踵","exw":"一组五十个，做完还要站着。"},{"no":8,"n":"前臂肌群","k":"forearm","c":"0111","coord":"主动 · 幕后 · 松 · 留给自己","one":"台上看不见它，台上稳不稳看它","loc":"二十来条挤在前臂里，屈肌起于内上髁，伸肌起于外上髁，肌腹在上半段，往下都变成细长的肌腱穿过手腕。抓、拧、拎、捏，全从这里发出去。","per":"它的肌腹长在手臂上，干出来的活全在手上。\n用这块肌肉的人多半是\"手先动\"的那种。不太发表意见，不擅长总结，但一件具体的事放在面前，他们会直接开始做。做完也不太说，因为在他们看来，说出来反而像在要什么。\n他们的可靠不是承诺出来的，是做出来的。麻烦在于这种可靠很容易被当成默认配置——就像没人会感谢自己的手，但所有人都在用手。","day":"文档发出去之前，你把格式统一了一遍。没人要求。\n标题层级、行距、页码，你只是看着别扭。对方收到之后说\"挺好的\"，你以为他说的是内容。\n朋友家的椅子腿松了，你蹲下去看了看，说\"有螺丝刀吗\"。修好之后拍了拍手说\"行了\"，然后就聊别的了。那把椅子后来用了三年。\n你帮人装过系统、导过数据、恢复过误删的文件。这些事你都会，但你从不主动说自己会。有人问起你说\"我试试\"，试完就好了。对方说谢谢，你说\"小事情\"。","mate":"quads","mw":"一个干脏活，一个替补位。都在做别人的活，只有彼此不计较这个。","foe":"biceps","fw":"一个干了大半的活，一个拿走了全部的注意。","ex":"农夫行走","exw":"拎着走一趟，手上全是活。"},{"no":9,"n":"股四头肌","k":"quads","c":"1000","coord":"承重 · 台前 · 紧 · 给别人","one":"谁松了，它就紧一点","loc":"四个头，股直肌起于髂前下棘，另外三个起于股骨，合成一条肌腱包住髌骨，再落在胫骨粗隆。管伸膝——上楼、起身、蹲下。它还是下楼梯时的刹车，每一步都要接住整个体重的下落。","per":"四个头，一个出口。谁的活最后都从这儿出去。\n它是最典型的代偿肌：臀肌该出力的时候不出力，它就来顶上，顶到大腿前侧发烫。用它的人也是这样，习惯先看有没有人做，没有就自己上。这个判断快得不需要思考，快到他们自己都以为那是\"顺手\"。\n问题就在\"顺手\"这两个字上。补位补久了，会忘了那本来不是自己的活。等到某天他们累了、慢了半拍，反而会有人问\"你今天怎么了\"。","day":"同事请假，你没等他开口就把活接了。\n两周后他回来交接，说\"辛苦你了\"，你说\"没什么\"。你确实没提，因为提了像是在计较。\n家里周末大扫除，你在厨房、阳台、卫生间之间来回，中间没坐下过。其他人也不是不干，只是干完自己那一块就停了。你停下来的时候，是全部干完了。\n你带新人，教得很细，连邮件怎么回都示范了一遍。他上手后出了次错，你在会上说是自己没交代清楚。散会后你跟他说\"下次注意就行\"，然后自己把那个错补掉了。","mate":"forearm","mw":"一个干脏活，一个替补位。都在做别人的活，只有彼此不计较这个。","foe":"glutes","fw":"本该它上的时候你在偷懒，久了它就替你顶，顶到大腿前侧发烫。","ex":"深蹲","exw":"蹲到底再起来，全靠它推。"},{"no":10,"n":"腹直肌","k":"abs","c":"1001","coord":"承重 · 台前 · 紧 · 留给自己","one":"有分寸，虽然不响","loc":"一对竖着的长条，从耻骨联合起，往上收在第五到第七肋软骨和胸骨剑突。中间被腹白线分开，又被三四道腱划分段——那几道横纹就是\"块\"的边界。它把躯干卷起来，也维持腹腔压力，咳嗽、用力前那一口憋气都靠它。","per":"它出不出现，不取决于练，取决于吃。\n这就注定了它带着纪律性。用它的人通常有一套自己定的规矩，不需要别人监督：说几点睡就几点睡，说这周不喝就不喝，答应了的事会写下来。\n这种分寸藏在细节里——不迟到、不多说、不越界、不占便宜。别人只看到结果那一下：他很稳、很干净、很靠谱。看不到的是前面那些忍住的部分。而忍住这件事他们从不拿出来讲，因为一讲就变成了邀功。","day":"你答应了周三给，周二晚上就做完了。\n发出之前检查了三遍，还留了个备份。对方说\"不用这么急\"，你说\"反正做完了\"。\n减脂期聚餐，大家点了一桌，你吃了几筷子青菜，说不饿。其实你饿，但你更不想第二天早上那个数字往上走。整晚你都在参与聊天，没人看出你在忍。\n有一次没忍住，吃了很多。第二天早上你比平时早起一小时去跑步，跑的时候心里在算账，算完就没事了。但那一整天你都不太想说话。","mate":"calves","mw":"一个从不被提，一个不轻易露面。都习惯没人看见，所以都看得见对方。","foe":"diaphragm","fw":"一个要腹腔压力往上顶，一个要它往下沉，深呼吸的时候最明显。","ex":"悬垂举腿","exw":"不借力，慢慢卷，最后两下最难。"},{"no":11,"n":"腹斜肌","k":"obliques","c":"1010","coord":"承重 · 台前 · 松 · 给别人","one":"一转身就把事接住","loc":"外斜从第五到第十二肋斜向前下，收在髂嵴；内斜在下面，方向正好相反。两层交叉，单侧收缩让你转身，两侧一起收缩让你弯腰、稳住腰。拧毛巾、挥拍、转身拿后座的东西，都靠这一对。","per":"两层纤维朝着相反的方向长。这是它转身快的原因。\n用它的人反应快，而且快得不显眼。不是提前规划好一切的那种人，但场面一乱，他们能立刻找到可以转身的角度。会开到僵住，他们能换个说法把话接下去；活动出了岔子，他们能在三十秒内想出替代方案。\n这种灵巧是善意，代价是——因为总能接住，所以总被扔过来。久而久之他们变成那个\"什么事都可以找他\"的人，而自己也习惯不拒绝，因为拒绝要停下来，而他们天生转得快。","day":"客户晚上十点改需求，明天要交。你没抱怨，先问了三个问题。\n然后你把方案拆成能做和不能做的两部分，当晚发过去一版。发完才觉得累。\n两个朋友在群里吵起来，话说得越来越难听。你没站队，说了句\"要不先见面聊\"，然后把时间定了。后来他们和好了，谁都没提你那句话。\n公司办活动，投影突然坏了。你在台下看了两秒，起身去找备用线，路上顺手把流程单调了一下，把不需要投影的环节提前。整场结束，只有主持人知道你做了什么。","mate":"hams","mw":"一个绷着不肯松，一个转身就接住。绷着的那个，第一次被人接住。","foe":"erector","fw":"转身的时候一个转、一个拉，方向永远是反的。","ex":"俄罗斯转体","exw":"转起来的时候才知道它一直在。"},{"no":12,"n":"臀大肌","k":"glutes","c":"1011","coord":"承重 · 台前 · 松 · 留给自己","one":"有劲，但不急着用","loc":"人体体积最大的一块。起于髂骨翼外面、骶骨和尾骨背面，斜向下外，收在股骨臀肌粗隆和髂胫束。把大腿往后拉——起身、上楼、跨大步。走路时它不太用力，一上坡立刻变成主力。","per":"全身最大的一块肌肉，平时几乎不响。\n用它的人不缺力气，但不爱用。不抢着发言，不在群里第一个表态，遇到争执先看着。看上去像没意见，其实是在等——等事情明朗，等别人说完，等那个真需要他出手的时机。\n他们的判断力往往很好，因为别人争的时候他们一直在看。所以关键时只说一句，那句话常常就定了。日常里反而显得懒散：能坐着不站着，能明天做不今天做。这两面是同一件事——把力气留着，用在值得的地方。","day":"会开到第四十分钟，两派吵起来了。你一直没说话。\n中间喝了两次水。最后领导问你，你说了三句，把两边的分歧归到一个其实不重要的问题上，给了个折中方案。会就散了。\n朋友说你\"好像什么都不在意\"。确实，迟到十分钟你不生气，饭难吃你不抱怨，计划变了你说\"行\"。但他们不知道，上次有人在你面前为难另一个人，你站起来那一下，全桌都安静了。\n你不主动揽事，但每次真出事，大家第一个想到的是你。你自己也清楚，所以平时更懒得表现。有人问你怎么总能稳住，你说\"也没做什么\"。","mate":"erector","mw":"一个撑着不动，一个有劲不肯用。凑在一起，谁也倒不了。","foe":"quads","fw":"你不使劲，它就得替你使劲，久了它比你还累。","ex":"臀推","exw":"顶到最高点停一秒，那一下最实。"},{"no":13,"n":"膈肌","k":"diaphragm","c":"1100","coord":"承重 · 幕后 · 紧 · 给别人","one":"一天两万次，没有休息日","loc":"一片倒扣的碗，把胸腔和腹腔隔开。起于剑突后面、下六根肋骨内面和腰椎两侧的膈脚，收成中心腱。吸气时往下沉一到两公分，空气自己就进来了。呼气是被动的。","per":"一天两万次，从出生到最后一刻，中间没有休息日。\n用它的人往往是房间里的气压。不主导谈话，也不做决定，但只要他们在，气氛就不会塌。家里有一次不愉快的沉默，是他们先说了句无关的话把场面接过去；团队里两个人不对付，是他们分别去说了几句，让事情没有继续坏下去。\n这种维持是无形的，也没人统计过。辛苦在于不能停：别人可以情绪不好、可以消失一天、可以说我不想管了，他们不行，因为他们知道一停那边就乱了。所以他们很少喊累，喊了也没人接得住。","day":"过年饭桌上，你爸和你哥又顶起来了。你去厨房端了盘菜出来。\n\"先吃，凉了。\"这顿饭后来吃完了。\n你在一个十几人的群里，没人说话的时候你会发个表情。不是闲，是你受不了那个空着的对话框。有人吵架，你会私聊其中一个问\"你还好吗\"。\n你妈住院那几天，你白天上班晚上陪床，中间还要回工作消息。医生问家属情况，你说\"都挺好的\"。出院那天你在停车场坐了很久，没开空调，也没发动车。","mate":"delts","mw":"一个挡在外面，一个撑在里面。都不喊累，所以只有彼此知道。","foe":"abs","fw":"一个往下沉，一个往上收，核心和呼吸一直在争这块地方。","ex":"大重量前的那一口深吸气","exw":"不算动作，但每次都是它先把身体撑住。"},{"no":14,"n":"髂腰肌","k":"psoas","c":"1101","coord":"承重 · 幕后 · 紧 · 留给自己","one":"话咽回去，身体记着","loc":"腰大肌起在第十二节胸椎到第五节腰椎的椎体上，穿过腹腔，和髂肌汇合，落在股骨内侧的小转子上。全身唯一一块直接连接脊柱和下肢的肌肉。久坐时它一直缩着，缩久了会短。","per":"全身只有它，把脊柱和腿直接连在一起。\n所以那些没出口的话，最后都落在腿上。这类人不擅长当场反应：被冒犯时往往没什么表情，甚至还能笑一下，把话题接过去。真正反应过来是几个小时以后，通常在洗澡、关灯前、或者半夜突然睁眼的时候。\n他们在意的程度不比谁低，只是当时那个通道堵住了。想说的、该说的、想反驳的，一句也没出去，然后由身体接管——肩背发紧、胃口变差、睡前一直磨一件事。下次还是这样，因为那个反应速度改不了。","day":"会上有人当众否了你的方案，用的词不太好听。\n你说了句\"我再改改\"，然后真的记了笔记。晚上两点你醒了，把那段对话重新过了一遍，想到一句特别好的回话。那句最后没说出去。\n你和家里人有矛盾，从来不在电话里讲。你会说\"没事\"\"我知道了\"\"你注意身体\"。挂了电话在沙发上坐着，什么也没做，坐了半小时。\n有段时间你总胃不舒服，去医院查了没什么问题。那段时间你正在忍一件不能跟任何人说的事。事情过去之后胃就好了。你没把这两件事联系起来，只觉得那阵子运气不好。","mate":"traps","mw":"一个把力气全给出去，一个把话全咽下去。碰上了，反而都能松一点。","foe":"glutes","fw":"一个把腿往前送，一个把腿往后拉。久坐的人，前者太短，后者太懒。","ex":"弓步蹲","exw":"前腿拉开的那一下，髋前面会告诉你它紧不紧。"},{"no":15,"n":"背阔肌","k":"lats","c":"1110","coord":"承重 · 幕后 · 松 · 给别人","one":"力气很大，很少被叫醒","loc":"背部覆盖面最大的一块。起于下背棘突、胸腰筋膜、髂嵴后部和下三四根肋骨，向上外集中穿过腋窝，收在肱骨前面。引体向上靠它，划船靠它，把东西从高处拽下来也靠它。","per":"每克只有 1.4 个肌梭，全身最低。它不是没力气，是大脑收不到它的回信。\n这就是为什么练背的人总说\"找不到感觉\"。而用它的人也有类似的处境：安静到容易被低估。不在会上抢话，不在群里刷存在，不在任何场合主动证明自己。相处久了才会发现，事情只要交到他们手上就不用再问。\n他们的力气是储备型的：平时不动，动了就是大事。搬家、出事、有人撑不住了，他们才伸手，一伸手就把整件事接过去。也正因为这样，他们的付出总被当成偶然——好像他们只是那天刚好有空。","day":"每次搬家，朋友第一个想到你。\n你自己也知道为什么——你搬得动，而且不抱怨。搬完之后在楼下吃饭，大家说的都是\"今天多亏了谁谁谁\"，说的是那个联系车的人。\n你很少主动说话，但有人真遇到难处，第一个打电话的是你。你在电话里听很久，最后只说一两句，那两句往往很有用。对方后来说\"他这个人特别靠谱\"，你听到了，没接话。\n有一次整个项目要塌，所有人都慌了。你花了两个通宵把最关键的那部分补上，发出去时写了句\"这部分我先处理了\"。没有别的解释。事情过去了，你也没再提。","mate":"biceps","mw":"一个想要被看见，一个从不露面。前者替后者把想说的话说了。","foe":"pecs","fw":"推和拉的两头，练偏一边，另一边就得替你承担姿势的代价。","ex":"引体向上","exw":"拉上去那一下，背才终于有回信。"},{"no":16,"n":"比目鱼肌","k":"soleus","c":"1111","coord":"承重 · 幕后 · 松 · 留给自己","one":"站着不动，也是它在撑","loc":"藏在腓肠肌下面，起于腓骨头后部和胫骨后面，收进跟腱。它跨踝关节但不跨膝——膝盖弯着的时候腓肠肌使不上劲，只剩它还能工作。站立不动时身体会轻微前后晃，是它一直在微调。","per":"它是姿势肌，专门负责不让人往前栽。\n这类人不出声，也不移动，只是稳稳地在那儿。他们往往是关系里的地基：不热闹，不主动，但少了他们，所有东西都开始晃。他们的力量不在于做了什么，而在于一直在。\n这种一直在最容易被误解成天生。别人会说\"你本来就稳\"\"你从来不会慌\"\"你不用管我\"。他们听到这些也不会去纠正，因为纠正需要解释，解释又像是在讨要什么。","day":"你在一家公司待了很多年。同期的人换了一轮，你还在。\n不是没机会走，是你觉得这里的事还没做完，人也还需要你。有人问你为什么不跳，你说\"还行吧，习惯了\"。\n你陪一个人度过很难的几年。那几年你没说过什么动人的话，只是每次他打电话你都在，每次他说想放弃你说\"那就先歇会儿\"。后来他好了，回忆那段时提了很多帮过他的人，你也笑着听。\n你的日常是重复的：同一个时间起床，同一条路线上班，同一家店吃早饭。有人觉得太闷，你不觉得。你觉得日子能这样一天一天过下去，本身就不容易。这个想法你也没跟谁说过。","mate":"pecs","mw":"一个站最前面，一个站最后面。前面有人喊你，后面有人托着你。","foe":"calves","fw":"同一组里的两层，一个在明一个在暗，功劳常算在明的那层。","ex":"坐姿提踵","exw":"膝盖弯着练，练的是藏起来的那一层。"}],"quiz":[{"n":1,"a":1,"q":"一件本来没人管的事，搁在那儿好几天了。","o":[["先动手做，做完再跟别人说一声",0],["先把各自手上该做的都盯好，这件事等有人牵头",1],["去问一句\"这个谁管\"，问完通常就变成你管",0]]},{"n":2,"a":2,"q":"开会时你发现方案里有个明显的漏洞。","o":[["当场说出来，说清楚就行",0],["换个软一点的说法，在会上提一句，但不点破",0],["会后单独找负责人说",1]]},{"n":3,"a":3,"q":"出门十分钟，你突然想到门可能没锁。","o":[["会回去看一眼，不看这一天都不踏实",0],["想一下就算了，多半是锁了",1],["不回去，但会在脑子里把锁门的动作过一遍",0]]},{"n":4,"a":4,"q":"聚餐快结束，盘子里还剩最后一块。","o":[["先问一圈\"还有人要吗\"",0],["直接夹了，反正放着也是浪费",1],["先不动，等别人都夹完你再夹",0]]},{"n":5,"a":1,"q":"朋友说他最近想开始练，问你该怎么办。","o":[["你说\"先去几次，看看自己喜欢什么\"",1],["你直接给他排了一周的计划，练什么、几组、几次",0],["你说\"先别急着定计划，把现在能做的动起来就行\"",1]]},{"n":6,"a":2,"q":"一个项目做完了，效果还不错。","o":[["会在总结里写清楚自己做了哪几块",0],["会把过程整理出来发给团队，但不强调是谁做的",1],["会在会上把关键的那几步讲一遍",0]]},{"n":7,"a":3,"q":"你发了条消息，对方两个小时没回。","o":[["会想是不是自己哪句话说得不好",0],["大概在忙，该回就回了",1],["会点开对话框看几次，但不催",0]]},{"n":8,"a":4,"q":"有人在卧推，问你能不能帮忙保护一下。","o":[["马上过去，全程盯着杠",0],["说\"我这组做完就来\"，然后真的做完就去了",1],["过去，但只在最后一组搭把手",1]]},{"n":9,"a":1,"q":"朋友遇到麻烦，半夜给你发了一条很长的消息。","o":[["直接打电话过去",0],["先回一句\"我在，你说\"，等他自己讲",1],["问清事情经过，然后帮他想办法",0]]},{"n":10,"a":2,"q":"你帮了一个人很大的忙。","o":[["不会主动提，别人问起才说",1],["会在合适的场合提一句，让他知道这是个人情",0],["完全不提，连别人问都含糊过去",1]]},{"n":11,"a":3,"q":"一组做完，教练说\"还能再做两个\"。","o":[["会再多做两个，不然觉得没练到",0],["到数就停，练完还有别的事",1],["看今天状态，状态好就多做，状态一般就收",1]]},{"n":12,"a":4,"q":"周末两天，一件是你自己想做的事，一件是别人托你的事。","o":[["先办别人的，自己的往后放",0],["先办自己的，别人的排到下周",1],["两件都办，把自己那件压成半天",0]]},{"n":13,"a":1,"q":"团队里有个活没人愿意接。不难，就是麻烦。","o":[["等分工定下来，定了就做",1],["直接接，反正总得有人做",0],["先看看有没有人主动，没人再说",1]]},{"n":14,"a":2,"q":"练了半年，体型有变化了。","o":[["会发出来，练了就是给人看的",0],["自己照镜子看就行，不发",1],["会发，但设成仅自己可见",1]]},{"n":15,"a":3,"q":"明天有个重要场合——面试、汇报，或者见一个很久没见的人。","o":[["前一晚把可能被问到的都想一遍",0],["想一想大方向就睡，细节临场再说",1],["该准备的准备好，剩下的不管了",1]]},{"n":16,"a":4,"q":"你手上有一件挺急的事，同时有人来找你帮忙。","o":[["先帮他，自己的熬夜做",0],["说\"我这边有急事，晚点行吗\"，然后真的晚点再去",1],["让他先自己试试，卡住了再来找你",1]]},{"n":17,"a":1,"q":"深蹲架被占了，你今天的计划就是深蹲。","o":[["过去问能不能一起练，边练边等",0],["换个动作，等他走了再说",1],["看看还有没有别的架子，没有就先练别的",1]]},{"n":18,"a":2,"q":"朋友在群里问你一件你正好擅长的事。","o":[["直接在群里回，写清楚",0],["私聊他，说得细一点",1],["群里只回\"这个可以这样\"，具体的等他自己来问",1]]},{"n":19,"a":3,"q":"一件已经过去的事——说错的一句话，或者一次没做好的事。","o":[["隔几天还会突然想起来，把当时的细节过一遍",0],["当时有点在意，第二天就过去了",1],["会一直记着，但不再影响什么",0]]},{"n":20,"a":4,"q":"训练快结束，有人在等你的器械，你还有两组没做完。","o":[["加快做完，让他少等一会儿",0],["按自己的节奏做完",1],["问他急不急，急的话先让他来",0]]}]};
+const T = {}, ORDER = [];
+DATA.types.forEach(function(t){ T[t.k] = t; ORDER.push(t.k); });
+
+const AXIS_NAME = ['怎么使劲','谁看得见','松还是紧','力气先给谁'];
+const $ = function(s){ return document.querySelector(s); };
+
+/* ---------------- 状态 ---------------- */
+let idx = 0;
+let picks = new Array(DATA.quiz.length).fill(-1);
+
+/* ---------------- 页面切换 ---------------- */
+function show(id){
+  document.querySelectorAll('.screen').forEach(function(el){
+    el.classList.toggle('on', el.id === id);
+  });
+  if (id === 'cover') refreshLastTip();
+}
+
+/* ---------------- 封面 ---------------- */
+$('#startBtn').onclick = function(){ startQuiz(); };
+
+function startQuiz(){
+  idx = 0;
+  picks = new Array(DATA.quiz.length).fill(-1);
+  show('quiz');
+  renderQ();
+  if (history.replaceState) history.replaceState(null,'',location.pathname + location.search);
+}
+
+/* ---------------- 答题 ---------------- */
+function renderQ(){
+  const q = DATA.quiz[idx];
+  $('#qIdx').textContent = String(idx + 1).padStart(2,'0');
+  $('#qAxis').textContent = AXIS_NAME[q.a - 1];
+  $('#qText').textContent = q.q;
+
+  /* 刻度条 */
+  const tk = $('#ticks');
+  if (tk.children.length !== DATA.quiz.length) {
+    tk.innerHTML = DATA.quiz.map(function(){ return '<i></i>'; }).join('');
+  }
+  Array.prototype.forEach.call(tk.children, function(el, i){
+    el.className = (i === idx ? 'now' : '') + (picks[i] >= 0 && i !== idx ? ' done' : '');
+  });
+
+  /* 选项 */
+  const box = $('#opts');
+  box.innerHTML = '';
+  q.o.forEach(function(o, oi){
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'opt' + (picks[idx] === oi ? ' sel' : '');
+    b.innerHTML = '<span class="k">' + 'ABC'[oi] + '</span>' + o[0];
+    b.onclick = function(){ pick(oi); };
+    box.appendChild(b);
+  });
+  box.parentNode.scrollTop = 0;
+
+  /* 按钮状态 */
+  $('#prevBtn').disabled = (idx === 0);
+  $('#nextBtn').disabled = (picks[idx] < 0);
+  $('#nextBtn').textContent = (idx === DATA.quiz.length - 1) ? '看结果' : '下一题';
+}
+
+function pick(oi){
+  picks[idx] = oi;
+  const opts = $('#opts').children;
+  for (let i = 0; i < opts.length; i++) opts[i].classList.toggle('sel', i === oi);
+  $('#nextBtn').disabled = false;
+  const tk = $('#ticks').children[idx];
+  if (tk && idx !== DATA.quiz.length - 1) tk.classList.add('done');
+}
+
+$('#prevBtn').onclick = function(){ if (idx > 0) { idx--; renderQ(); } };
+$('#nextBtn').onclick = function(){
+  if (picks[idx] < 0) return;
+  if (idx < DATA.quiz.length - 1) { idx++; renderQ(); }
+  else finish();
+};
+
+/* 键盘：← → 翻页，1/2/3 选择 */
+document.addEventListener('keydown', function(e){
+  if (!$('#quiz').classList.contains('on')) return;
+  if (e.key === 'ArrowLeft') { $('#prevBtn').click(); }
+  if (e.key === 'ArrowRight') { $('#nextBtn').click(); }
+  if (e.key >= '1' && e.key <= '3') { pick(+e.key - 1); }
+});
+
+/* ---------------- 计分 ---------------- */
+function compute(){
+  const z = [0,0,0,0];                 /* 每轴 0 极票数 */
+  DATA.quiz.forEach(function(q, i){
+    const o = q.o[picks[i]];
+    if (o[1] === 0) z[q.a - 1]++;
+  });
+  /* 每轴 5 题，奇数票，必有 3 票以上一方，不会平票 */
+  return z.map(function(v){ return v >= 3 ? '0' : '1'; }).join('');
+}
+
+/* ---------------- 结果 ---------------- */
+function finish(){
+  const code = compute();
+  const t = DATA.types.find(function(x){ return x.c === code; }) || DATA.types[0];
+  unlock(t.k);
+  renderResult(t, code);
+  show('result');
+  $('#resBody').scrollTop = 0;
+  if (history.replaceState) history.replaceState(null,'', '#r=' + t.k);
+}
+
+function paras(s){
+  return s.split('\n').filter(Boolean).map(function(p){ return '<p>' + p + '</p>'; }).join('');
+}
+function dots(code){
+  return '<span class="dots">' + code.split('').map(function(c){
+    return '<i class="' + (c === '1' ? 'on' : '') + '"></i>';
+  }).join('') + '</span>';
+}
+
+function renderResult(t, code){
+  const mate = T[t.mate];
+  const foe  = T[t.foe];
+  $('#resBody').innerHTML =
+    '<div class="resTop">' +
+      '<div>' +
+        '<div class="resKicker">你大概是这一块</div>' +
+        '<h2 class="resName">' + t.n + '</h2>' +
+      '</div>' +
+      '<div class="resCode"><b>' + code + '</b><span>' + t.coord + '</span></div>' +
+    '</div>' +
+    '<p class="resOne">' + t.one + '</p>' +
+
+    '<div class="whereMark">它在哪</div>' +
+    '<div class="resTxt">' + paras(t.loc) + '</div>' +
+
+    '<details class="sec" open><summary><b>这块肌肉怎么变成了性格</b></summary>' +
+      '<div class="inner">' + paras(t.per) + '</div></details>' +
+
+    '<details class="sec"><summary><b>日常里它长这样</b>　三个场景，展开看</summary>' +
+      '<div class="inner">' + paras(t.day) + '</div></details>' +
+
+    '<div class="xtra">' +
+      '<div class="xRow"><span class="xK">谁和你是最搭配的</span>' +
+        '<b>' + mate.n + '<span class="wk">' + mate.c + '</span>' + '</b>' +
+        '<p>' + t.mw + '</p></div>' +
+      '<div class="xRow"><span class="xK">你最喜欢的健身动作</span>' +
+        '<b>' + t.ex + '</b><p>' + t.exw + '</p></div>' +
+      '<div class="xRow"><span class="xK">你的死对头是哪一块</span>' +
+        '<b>' + foe.n + '<span class="wk">' + foe.c + '</span></b><p>' + t.fw + '</p></div>' +
+    '</div>';
+}
+
+/* ---------------- 分享 ---------------- */
+$('#shareBtn').onclick = function(){
+  const t = DATA.types.find(function(x){
+    return ('#r=' + x.k) === location.hash;
+  }) || DATA.types.find(function(x){ return x.c === compute(); });
+  const name = t ? t.n : '肌肉';
+  const url = location.origin + location.pathname + '#r=' + (t ? t.k : '');
+  const txt = '我是' + name + '。你是哪一块？\n' + url;
+  const done = function(){ toast('已复制，粘贴给朋友就行'); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(done, fallback);
+  } else fallback();
+  function fallback(){
+    const ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch(e) { toast('复制失败，请长按选择'); }
+    document.body.removeChild(ta);
+  }
+};
+
+let toastT = null;
+function toast(msg){
+  const el = $('#toast');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(toastT);
+  toastT = setTimeout(function(){ el.classList.remove('on'); }, 1800);
+}
+
+/* ---------------- 记录 ---------------- */
+function loadHist(){
+  try {
+    const a = JSON.parse(localStorage.getItem('ms_history') || '[]');
+    return Array.isArray(a) ? a.filter(function(h){ return h && T[h.k]; }) : [];
+  } catch(e){ return []; }
+}
+function pushHist(key){
+  try {
+    const a = loadHist();
+    a.unshift({ k: key, t: Date.now() });
+    localStorage.setItem('ms_history', JSON.stringify(a.slice(0, 60)));
+  } catch(e){}
+}
+function unlock(key){
+  try {
+    const a = JSON.parse(localStorage.getItem('ms_unlocked') || '[]');
+    if (a.indexOf(key) < 0) { a.push(key); localStorage.setItem('ms_unlocked', JSON.stringify(a)); }
+  } catch(e){}
+  pushHist(key);
+}
+function loadUnlocked(){
+  try {
+    const a = JSON.parse(localStorage.getItem('ms_unlocked') || '[]');
+    return Array.isArray(a) ? a : [];
+  } catch(e){ return []; }
+}
+function ago(ts){
+  const d = (Date.now() - ts) / 1000;
+  if (d < 90) return '刚刚';
+  if (d < 3600) return Math.floor(d / 60) + ' 分钟前';
+  if (d < 86400) return Math.floor(d / 3600) + ' 小时前';
+  if (d < 86400 * 30) return Math.floor(d / 86400) + ' 天前';
+  const dt = new Date(ts);
+  return (dt.getMonth() + 1) + ' 月 ' + dt.getDate() + ' 日';
+}
+function refreshLastTip(){
+  const el = $('#lastTip');
+  const h = loadHist()[0];
+  el.innerHTML = (h && T[h.k])
+    ? '上次测出 <b>' + T[h.k].n + '</b><span class="dotm"></span>' + ago(h.t)
+    : '';
+}
+
+/* ---------------- 图鉴 ---------------- */
+$('#galleryBtn').onclick = function(){ renderGallery(); show('gallery'); };
+$('#backBtn').onclick = function(){
+  var hasResult = /^#r=\w+$/.test(location.hash);
+  show(hasResult ? 'result' : 'cover');
+  if (!hasResult) refreshLastTip();
+};
+$('#againBtn').onclick = function(){ startQuiz(); };
+
+function renderGallery(){
+  const got = loadUnlocked();
+  const hist = loadHist();
+  $('#gSub').textContent = '已解锁 ' + got.length + ' / 16'
+    + (hist.length > 1 ? '，一共测过 ' + hist.length + ' 次' : '')
+    + '。换个答法，会摸到另一块自己。';
+
+  $('#gGrid').innerHTML = ORDER.map(function(k){
+    const t = T[k], on = got.indexOf(k) >= 0;
+    return '<div class="gCard ' + (on ? 'on' : '') + '">' +
+      dots(t.c) +
+      '<div class="nm">' + t.n + '</div></div>';
+  }).join('');
+
+  const ttl = $('#gHistT'), box = $('#gHist');
+  if (!hist.length) { ttl.style.display = 'none'; box.innerHTML = ''; return; }
+  ttl.style.display = '';
+  box.innerHTML = hist.slice(0, 12).map(function(h){
+    const t = T[h.k];
+    return '<div class="hRow"><b>' + t.n + '</b><span class="hC">' + t.c + '</span>' +
+           '<span class="hT">' + ago(h.t) + '</span></div>';
+  }).join('');
+}
+
+/* ---------------- 启动 ---------------- */
+(function boot(){
+  refreshLastTip();
+  /* 分享链接直达结果 */
+  const m = location.hash.match(/^#r=(\w+)$/);
+  if (m && T[m[1]]) {
+    const t = T[m[1]];
+    renderResult(t, t.c);
+    show('result');
+  }
+})();
+</script>
+</body>
+</html>
